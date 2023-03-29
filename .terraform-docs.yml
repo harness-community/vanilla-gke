@@ -1,0 +1,12 @@
+formatter: "md table"
+
+content: |
+  The following sections details the inputs and outputs that are configurable as part of the tutorial's terraform automation,
+  
+  {{ .Inputs }}
+
+  {{ include "docs/.vars-example.md" }}
+
+  {{ .Outputs }}
+
+  ---8<-- "includes/abbrevations.md"

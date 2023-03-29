@@ -1,0 +1,26 @@
+stages:
+  - gitops
+
+# Bootstrap Flux
+# this needs to be done only once and ensure the $CI_COMMIT_AUTHOR is not your token
+bootstrap-flux:
+  stage: gitops
+  only:
+    - triggers
+  image:
+    name: registry.gitlab.com/kameshsampath/kube-dev-tools
+    entrypoint: [""]
+  variables:
+    GITLAB_TOKEN: $FLUX_PROJECT_ACCESS_TOKEN
+  before_script:
+    - kubectl config get-contexts
+    - kubectx $CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:gke-agent
+    - kubectl get pods
+  script: |
+    flux bootstrap gitlab \
+    --owner=$CI_PROJECT_NAMESPACE \
+    --repository=$CI_PROJECT_NAME \
+    --branch=$CI_COMMIT_REF_NAME \
+    --path=clusters/dev \
+    --token-auth \
+    --personal

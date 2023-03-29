@@ -1,0 +1,187 @@
+# https://taskfile.dev
+
+version: "3"
+
+vars:
+  TFVARS_FILE: .local.tfvars
+  # The default namespace where application gets deployed
+  APP_NAMESPACE: demo-apps
+  # https://en.wikipedia.org/wiki/IETF_language_tag
+  LANG: ta
+
+dotenv:
+  - .env
+
+tasks:
+  default:
+    desc: Creates GKE cluster and Deploys the lingua-greeter application
+    cmds:
+      - task: create_cluster
+      - task: deploy_app
+    silent: true
+
+  clean:
+    desc: Clean all terraform artifacts/assets
+    silent: true
+    cmds:
+      - rm -rf .terraform .terraform.lock.hcl
+
+  format:
+    desc: Format terraform files
+    silent: true
+    cmds:
+      - terraform fmt --recursive {{.ROOT_DIR}}
+
+  init:
+    desc: Init terraform working directory
+    silent: true
+    cmds:
+      - mkdir -p {{.ROOT_DIR}}/.kube
+      - terraform init {{.CLI_ARGS}}
+
+  validate:
+    silent: true
+    deps:
+      - format
+    desc: Validate the terraform resources
+    cmds:
+      - terraform validate
+
+  create_cluster:
+    silent: true
+    deps:
+      - validate
+    aliases:
+      - create
+    desc: Create the GKE cluster
+    cmds:
+      - terraform apply -var-file={{.TFVARS_FILE}} {{.CLI_ARGS}}
+
+  gitops-app-source:
+    silent: true
+    desc: Creates the fluxcd GitOps GitRepository Source of the demo application "lingua-greeter".
+    generates:
+      - "{{.ROOT_DIR}}/clusters/dev/lingua-greeter-source.yaml"
+    aliases:
+      - app-source
+    cmds:
+      - |
+        flux create source oci lingua-greeter \
+         --url=oci://$LINGUA_GREETER_MANIFEST_IMAGE_REPO \
+         --provider=gcp \
+         --tag=latest \
+         --interval=1m \
+         --export > {{.ROOT_DIR}}/clusters/dev/lingua-greeter-source.yaml
+
+  gitops-app-kustomize:
+    silent: true
+    desc: Generate the flux kustomization resource to deploy the application
+    generates:
+      - "{{.ROOT_DIR}}/clusters/dev/lingua-greeter-kustomization.yaml"
+    aliases:
+      - app-kustomize
+    cmds:
+      - |
+        flux create kustomization lingua-greeter \
+        --target-namespace=demo-apps \
+        --source=OCIRepository/lingua-greeter \
+        --path="./" \
+        --prune=true \
+        --interval=1m \
+        --export > {{.ROOT_DIR}}/clusters/dev/lingua-greeter-kustomization.yaml
+
+  get_kubeconfig:
+    silent: true
+    desc: Get Kubeconfig of the cluster
+    generates:
+      - "{{.ROOT_DIR}}/.kube/config"
+    aliases:
+      - kubeconfig
+    cmds:
+      - mkdir -p {{.ROOT_DIR}}/.kube
+      - gcloud container clusters get-credentials {{.CLUSTER_NAME}} --zone={{.CLUSTER_ZONE}}
+    vars:
+      CLUSTER_NAME:
+        sh: terraform output -raw kubernetes-cluster-name
+      CLUSTER_ZONE:
+        sh: terraform output -raw zone
+  
+  deploy_app:
+    silent: true
+    aliases:
+      - "deploy"
+    desc: Deploy the application without workload identity
+    sources:
+      - app/config/*.yaml
+    status:
+      - |
+        kubectl rollout status -n demo-apps deployment/lingua-greeter --timeout=60s | grep -q 'deployment "lingua-greeter" successfully rolled out'
+    cmds:
+      - kubectl apply -k app/
+
+  flux_bootstrap:
+    silent: true
+    desc: Bootstrap flux
+    cmds:
+      - |
+        flux bootstrap gitlab \
+        --owner=$CI_PROJECT_NAMESPACE \
+        --repository=$CI_PROJECT_NAME \
+        --branch=main \
+        --path=clusters/dev \
+        --token-auth \
+        --personal
+
+  show_service_ip:
+    desc: Display the lingua-greeter service's LoadBalancer IP
+    silent: true
+    deps:
+      - deploy_app
+    cmds:
+      - |
+        echo "Service IP: {{.SERVICE_IP}}"
+        echo "Application URL: http://{{.SERVICE_IP}}"
+    vars:
+      SERVICE_IP:
+        sh: kubectl get svc -n {{.APP_NAMESPACE}} lingua-greeter -ojsonpath="{.status.loadBalancer.ingress[*].ip}"
+
+  call_service:
+    desc: Calls the lingua-greeter service
+    silent: true
+    cmds:
+      - curl -s "http://{{.SERVICE_IP}}/{{.LANG}}"
+    vars:
+      SERVICE_IP:
+        sh: kubectl get svc -n demo-apps lingua-greeter -ojsonpath="{.status.loadBalancer.ingress[*].ip}"
+
+  app_logs:
+    desc: Shows the application logs
+    silent: true
+    cmds:
+      - kubectl logs  -n {{.APP_NAMESPACE}} -lapp=lingua-greeter
+
+  patch_flux_sa:
+    desc: patch flux source controller to use workload identity
+    silent: true
+    cmds:
+      - sed '10,$s/^# //' {{.ROOT_DIR}}/clusters/dev/flux-system/kustomization.yaml | envsubst > {{.ROOT_DIR}}/clusters/dev/flux-system/kustomization.yaml.tmp
+      - mv {{.ROOT_DIR}}/clusters/dev/flux-system/kustomization.yaml.tmp {{.ROOT_DIR}}/clusters/dev/flux-system/kustomization.yaml
+
+  restart_app:
+    desc: Restarts the kubernetes deployment
+    silent: true
+    cmds:
+      - kubectl rollout restart -n {{.APP_NAMESPACE}} deployment/lingua-greeter
+      - kubectl rollout status -n {{.APP_NAMESPACE}} deployment/lingua-greeter --timeout=60s
+
+  destroy:
+    silent: true
+    desc: Destroys terraform resources
+    cmds:
+      - terraform destroy -var-file={{.TFVARS_FILE}} {{.CLI_ARGS}}
+
+  tfdocs:
+    desc: Build the terraform documentation
+    silent: true
+    cmds:
+      - terraform-docs {{.ROOT_DIR}} > {{.ROOT_DIR}}/docs/terraform.md
