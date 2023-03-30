@@ -14,16 +14,16 @@ bootstrap-flux:
     GITLAB_TOKEN: $FLUX_PROJECT_ACCESS_TOKEN
   before_script:
     - echo "Jai Guru"
-    # - kubectl config get-contexts
-    # - kubectx $CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:gke-agent
-    # - kubectl get pods
+    - kubectl config get-contexts
+    - kubectx $CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:gke-agent
+    - kubectl get pods
   script: |
     trigger_ref=$(cat $TRIGGER_PAYLOAD | jq '.ref')
-    echo "trigger ref $trigger_ref"
-    # flux bootstrap gitlab \
-    # --owner=$CI_PROJECT_NAMESPACE \
-    # --repository=$CI_PROJECT_NAME \
-    # --branch=$CI_COMMIT_REF_NAME \
-    # --path=clusters/dev \
-    # --token-auth \
-    # --personal
+    echo "Using ref $trigger_ref from trigger"
+    flux bootstrap gitlab \
+    --owner=$CI_PROJECT_NAMESPACE \
+    --repository=$CI_PROJECT_NAME \
+    --branch=$trigger_ref \
+    --path=clusters/dev \
+    --token-auth \
+    --personal
