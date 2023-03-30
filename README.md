@@ -33,14 +33,14 @@ export DEMO_HOME="$PWD"
 
 Set the following variables under **Project** --> **Settings** --> **CI/CD**,
 
-![GitLab CI/CD Variables](docs/images/gitlab\_cicd\_variables.png)
+![GitLab CI/CD Variables](/docs/images/gitlab\_cicd\_variables.png)
 
 ## Terraform Cloud Variables
 
 Set the following variables under **Workspace** --> **Variables**,
 
-![Terraform Variables](docs/images/tfcloud\_variables.png)
-![Terraform Variables](docs/images/tfcloud\_variables\_2.png)
+![Terraform Variables](/docs/images/tfcloud\_variables.png)
+![Terraform Variables](/docs/images/tfcloud\_variables\_2.png)
 
 The following sections details the inputs and outputs that are configurable as part of the tutorial's terraform automation,
 
@@ -68,7 +68,7 @@ The following sections details the inputs and outputs that are configurable as p
 
 Connect GitLab repository `$DEMO_HOME` with Terraform Cloud using the **Workspace** --> **Settings** --> **Version Control**,
 
-![Terraform Cloud Version Control](docs/images/tfcloud_vcs.png)
+![Terraform Cloud Version Control](/docs/images/tfcloud_vcs.png)
 
 Once you have connected your repo with Terraform cloud assuming you are using default settings, every push the GitLab repo will trigger a terraform `apply`.
 
