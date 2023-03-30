@@ -38,6 +38,7 @@ bootstrap-flux:
     - kubectx $FLUX_BOOTSTRAP_PROJECT_OWNER/$FLUX_BOOTSTRAP_PROJECT:gke-agent
     - kubectl get pods
   script: |
+    cat $TRIGGER_PAYLOAD
     flux bootstrap gitlab \
     --owner=$FLUX_BOOTSTRAP_PROJECT_OWNER \
     --repository=$FLUX_BOOTSTRAP_PROJECT \
