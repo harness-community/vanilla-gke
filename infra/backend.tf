@@ -1,6 +1,0 @@
-terraform {
-  cloud {
-
-  }
-}
-
