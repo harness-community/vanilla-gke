@@ -14,7 +14,7 @@ resources:
 #       metadata:
 #         name: source-controller
 #         annotations:
-#           iam.gke.io/gcp-service-account: gar-reader@$GCP_PROJECT.iam.gserviceaccount.com    
+#           iam.gke.io/gcp-service-account: $GAR_READER_SA
 #     target:
 #       kind: ServiceAccount
 #       name: source-controller

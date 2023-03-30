@@ -1,3 +1,24 @@
+variables:
+  FLUX_BOOTSTRAP_PROJECT_OWNER:
+    value: $CI_PROJECT_NAMESPACE
+    description: the project owner of $CI_PROJECT_NAME hold flux config
+    expand: true
+  FLUX_BOOTSTRAP_PROJECT:
+    value: $CI_PROJECT_NAME
+    description: the project name which will hold flux config
+    expand: true
+  FLUX_BOOTSTRAP_BRANCH:
+    description: the project branch where flux configs gets bootstrapped
+    value: $CI_DEFAULT_BRANCH
+    expand: true
+  FLUX_MANIFESTS_PATH:
+    value: clusters/dev
+    description: the project repo path where flux manifests will be created and sync
+  GAR_READER_SA:
+    value: gar-reader@$GCP_PROJECT.iam.gserviceaccount.com
+    description: the google service account with permissions to download artifacts from GAR
+    expand: true
+
 stages:
   - gitops
 
@@ -13,17 +34,14 @@ bootstrap-flux:
   variables:
     GITLAB_TOKEN: $FLUX_PROJECT_ACCESS_TOKEN
   before_script:
-    - echo "Jai Guru"
     - kubectl config get-contexts
-    - kubectx $CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:gke-agent
+    - kubectx $FLUX_BOOTSTRAP_PROJECT_OWNER/$FLUX_BOOTSTRAP_PROJECT:gke-agent
     - kubectl get pods
   script: |
-    trigger_ref=$(cat $TRIGGER_PAYLOAD | jq '.ref')
-    echo "Using ref $trigger_ref from trigger"
     flux bootstrap gitlab \
-    --owner=$CI_PROJECT_NAMESPACE \
-    --repository=$CI_PROJECT_NAME \
-    --branch=$trigger_ref \
-    --path=clusters/dev \
+    --owner=$FLUX_BOOTSTRAP_PROJECT_OWNER \
+    --repository=$FLUX_BOOTSTRAP_PROJECT \
+    --branch=$FLUX_BOOTSTRAP_BRANCH \
+    --path=$FLUX_MANIFESTS_PATH \
     --token-auth \
     --personal
