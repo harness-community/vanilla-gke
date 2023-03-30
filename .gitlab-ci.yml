@@ -17,10 +17,11 @@ bootstrap-flux:
     - kubectx $CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:gke-agent
     - kubectl get pods
   script: |
-    flux bootstrap gitlab \
-    --owner=$CI_PROJECT_NAMESPACE \
-    --repository=$CI_PROJECT_NAME \
-    --branch=$CI_COMMIT_REF_NAME \
-    --path=clusters/dev \
-    --token-auth \
-    --personal
+    cat $TRIGGER_PAYLOAD
+    # flux bootstrap gitlab \
+    # --owner=$CI_PROJECT_NAMESPACE \
+    # --repository=$CI_PROJECT_NAME \
+    # --branch=$CI_COMMIT_REF_NAME \
+    # --path=clusters/dev \
+    # --token-auth \
+    # --personal
