@@ -1,0 +1,11 @@
+replicas: ${agentReplicas}
+
+image:
+  tag: ${agentImageTag}
+
+config:
+  kasAddress: ${agentKasAddress}
+  token: ${agentToken}
+
+nodeSelector:
+  iam.gke.io/gke-metadata-server-enabled: "true"

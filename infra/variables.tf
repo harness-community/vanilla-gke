@@ -1,5 +1,6 @@
 variable "gcp_project" {
   description = "The Google Cloud Project"
+  sensitive   = true
 }
 
 variable "gcp_region" {
@@ -9,7 +10,7 @@ variable "gcp_region" {
 
 variable "cluster_name" {
   description = "The GKE cluster name"
-  default     = "wi-demos"
+  default     = "gitops"
 }
 
 variable "gke_num_nodes" {
@@ -37,17 +38,34 @@ variable "release_channel" {
 }
 
 variable "gitlab_agent_namespace" {
+  default     = "kube-system"
+  description = "Kubernetes namespace to install the GitLab Agent"
+}
+
+variable "gitlab_agent_name" {
   default     = "gitlab-agent"
-  description = "Kubernetes namespace to install the Agent"
+  description = "The GitLab Agent name. This value will be used to set the Helm release name of the chart"
 }
 
 variable "gitlab_agent_token" {
-  description = "Agent token (provided when registering an Agent in GitLab)"
+  description = "GitLab Agent token (provided when registering an Agent in GitLab)"
   sensitive   = true
 }
 
 variable "gitlab_kas_address" {
-  description = "Agent Server address (provided when registering an Agent in GitLab)"
+  description = "GitLab Agent Server address (provided when registering an Agent in GitLab)"
+  default     = "wss://kas.gitlab.com"
+}
+
+variable "gitlab_agent_image_tag" {
+  description = "GitLab Agent image tag"
+  default     = "v15.10.0"
+}
+
+variable "gitlab_agent_replicas" {
+  default     = 1
+  description = "The number of replicas for the agent"
+
 }
 
 variable "flux_system_namespace" {
@@ -58,14 +76,4 @@ variable "flux_system_namespace" {
 variable "flux_source_controller_ksa" {
   description = "The Kubernetes namespace where the flux is installed"
   default     = "source-controller"
-}
-
-variable "app_namespace" {
-  description = "The Kubernetes namespace where the lingua-greeter demo application will be deployed"
-  default     = "demo-apps"
-}
-
-variable "app_ksa" {
-  description = "The Kubernetes service account that will be used to run the lingua-greeter deployment"
-  default     = "lingua-greeter"
 }
