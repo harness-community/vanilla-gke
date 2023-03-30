@@ -9,7 +9,8 @@ dotenv:
   - .env
 
 includes:
-  infra: Infra_Tasks.yaml
+  infra: infra/Taskfile.yaml
+  dir: infra
 
 tasks:
   clean:
