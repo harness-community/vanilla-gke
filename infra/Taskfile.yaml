@@ -58,9 +58,3 @@ tasks:
     desc: Destroys terraform resources
     cmds:
       - terraform destroy -var-file={{.TFVARS_FILE}} {{.CLI_ARGS}}
-
-  tfdocs:
-    desc: Build the terraform documentation
-    silent: true
-    cmds:
-      - terraform-docs . > {{.ROOT_DIR}}/docs/terraform.md

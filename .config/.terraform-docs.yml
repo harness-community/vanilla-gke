@@ -1,12 +1,17 @@
 formatter: "md table"
 
+header-from: ../docs/.header.md
+footer-from: ../docs/.footer.md
+
 content: |
+  {{ .Header }}
+
   The following sections details the inputs and outputs that are configurable as part of the tutorial's terraform automation,
-  
+
   {{ .Inputs }}
 
-  {{ include "docs/.vars-example.md" }}
+  {{ include "../docs/.deployment.md" }}
 
   {{ .Outputs }}
 
-  ---8<-- "includes/abbrevations.md"
+  {{ .Footer }}

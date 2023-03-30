@@ -52,12 +52,12 @@ tasks:
     cmds:
       - task infra:destroy
 
-  tfdocs:
-    desc: Build the terraform documentation
+
+  readme:
+    desc: Build readme
     silent: true
     cmds:
-      - mkdir -p docs
-      - task infra:tfdocs
+      - terraform-docs infra > {{.ROOT_DIR}}/README.md
 
   get_kubeconfig:
     silent: true
