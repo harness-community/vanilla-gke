@@ -14,7 +14,6 @@ resource "helm_release" "gitlab_agent" {
       agentKasAddress = "${var.gitlab_kas_address}"
       agentReplicas   = "${var.gitlab_agent_replicas}"
       agentToken      = "${var.gitlab_agent_token}"
-
     })
   ]
 }
