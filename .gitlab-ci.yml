@@ -18,7 +18,8 @@ bootstrap-flux:
     # - kubectx $CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:gke-agent
     # - kubectl get pods
   script: |
-    cat $TRIGGER_PAYLOAD
+    trigger_ref=$(jq $TRIGGER_PAYLOAD '.ref')
+    echo "trigger ref $trigger_ref"
     # flux bootstrap gitlab \
     # --owner=$CI_PROJECT_NAMESPACE \
     # --repository=$CI_PROJECT_NAME \
