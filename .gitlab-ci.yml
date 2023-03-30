@@ -37,12 +37,16 @@ bootstrap-flux:
     - kubectl config get-contexts
     - kubectx $FLUX_BOOTSTRAP_PROJECT_OWNER/$FLUX_BOOTSTRAP_PROJECT:gke-agent
     - kubectl get pods
+  ## TODO verify trigger using HMAC signatures
   script: |
-    cat $TRIGGER_PAYLOAD
-    flux bootstrap gitlab \
-    --owner=$FLUX_BOOTSTRAP_PROJECT_OWNER \
-    --repository=$FLUX_BOOTSTRAP_PROJECT \
-    --branch=$FLUX_BOOTSTRAP_BRANCH \
-    --path=$FLUX_MANIFESTS_PATH \
-    --token-auth \
-    --personal
+    run_status=$(cat $TRIGGER_PAYLOAD | jq -r '.notifications[0].run_status' )
+    if [  run_status = "applied" ];
+    then
+      flux bootstrap gitlab \
+      --owner=$FLUX_BOOTSTRAP_PROJECT_OWNER \
+      --repository=$FLUX_BOOTSTRAP_PROJECT \
+      --branch=$FLUX_BOOTSTRAP_BRANCH \
+      --path=$FLUX_MANIFESTS_PATH \
+      --token-auth \
+      --personal
+    fi
