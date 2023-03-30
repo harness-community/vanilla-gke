@@ -58,3 +58,21 @@ tasks:
     desc: Destroys terraform resources
     cmds:
       - terraform destroy -var-file={{.TFVARS_FILE}} {{.CLI_ARGS}}
+
+  get_kubeconfig:
+    silent: true
+    desc: Get Kubeconfig of the cluster
+    generates:
+      - "{{.ROOT_DIR}}/.kube/config"
+    dir: infra
+    aliases:
+      - kubeconfig
+    cmds:
+      - mkdir -p {{.ROOT_DIR}}/.kube
+      - gcloud container clusters get-credentials {{.CLUSTER_NAME}} --zone={{.CLUSTER_ZONE}}
+    vars:
+      CLUSTER_NAME:
+        sh: terraform output -raw kubernetes-cluster-name
+      CLUSTER_ZONE:
+        sh: terraform output -raw zone
+

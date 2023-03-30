@@ -67,13 +67,8 @@ tasks:
     aliases:
       - kubeconfig
     cmds:
-      - mkdir -p {{.ROOT_DIR}}/.kube
-      - gcloud container clusters get-credentials {{.CLUSTER_NAME}} --zone={{.CLUSTER_ZONE}}
-    vars:
-      CLUSTER_NAME:
-        sh: terraform output -raw kubernetes-cluster-name
-      CLUSTER_ZONE:
-        sh: terraform output -raw zone
+      - task infra:get_kubeconfig
+
 
   flux_bootstrap:
     silent: true
