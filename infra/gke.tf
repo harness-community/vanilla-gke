@@ -52,7 +52,7 @@ resource "google_container_node_pool" "primary_nodes" {
 
     # preemptible  = true
     machine_type = var.machine_type
-    tags         = ["gke-node", "${var.gcp_project}-gke","flux","gitops"]
+    tags         = ["gke-node", "${var.gcp_project}-gke", "flux", "gitops"]
     metadata = {
       disable-legacy-endpoints = "true"
     }
