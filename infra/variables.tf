@@ -38,7 +38,7 @@ variable "release_channel" {
 }
 
 variable "install_gitlab_agent" {
-  description = "install gitlab agent"
+  description = "Install gitlab agent.**IMPORTANT** When you enable this, please make sure to provide the value for `gitlab_agent_token`."
   type        = bool
   default     = false
 
@@ -56,6 +56,7 @@ variable "gitlab_agent_name" {
 variable "gitlab_agent_token" {
   description = "GitLab Agent token (provided when registering an Agent in GitLab)"
   sensitive   = true
+  default = ""
 }
 
 variable "gitlab_kas_address" {
