@@ -74,12 +74,3 @@ variable "gitlab_agent_replicas" {
 
 }
 
-variable "flux_system_namespace" {
-  description = "The Kubernetes namespace where the flux is installed"
-  default     = "flux-system"
-}
-
-variable "flux_source_controller_ksa" {
-  description = "The Kubernetes namespace where the flux is installed"
-  default     = "source-controller"
-}
