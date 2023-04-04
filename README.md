@@ -1,6 +1,8 @@
-# Flux GKE Bootstrap
+# GKE Provision Template
 
-How to bootstrap [flux](https://fluxcd.io) with [Google Kubernetes Engine(GKE)](https://cloud.google.com/kubernetes-engine). The bootstrap happens via GitLab CI that receives a [webhook trigger](https://docs.gitlab.com/ee/ci/triggers/#use-a-webhook-payload) from Terraform Cloud once the GKE cluster is provisioned using [terraform](https://terraform.build).
+Template repository to provision [Google Kubernetes Engine(GKE)](https://cloud.google.com/kubernetes-engine) using [terraform](https://terraform.build).
+
+>**IMPORTANT**: Work in Progress
 
 ## Pre-requisites
 
