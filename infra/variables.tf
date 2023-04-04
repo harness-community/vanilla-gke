@@ -10,7 +10,7 @@ variable "gcp_region" {
 
 variable "cluster_name" {
   description = "The GKE cluster name"
-  default     = "gitops"
+  default     = "vanilla"
 }
 
 variable "gke_num_nodes" {
