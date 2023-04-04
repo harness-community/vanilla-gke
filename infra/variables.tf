@@ -37,6 +37,12 @@ variable "release_channel" {
   default     = "stable"
 }
 
+variable "install_gitlab_agent" {
+  description = "install gitlab agent"
+  type        = bool
+  default     = false
+
+}
 variable "gitlab_agent_namespace" {
   default     = "kube-system"
   description = "Kubernetes namespace to install the GitLab Agent"

@@ -2,8 +2,6 @@
 
 How to bootstrap [flux](https://fluxcd.io) with [Google Kubernetes Engine(GKE)](https://cloud.google.com/kubernetes-engine). The bootstrap happens via GitLab CI that receives a [webhook trigger](https://docs.gitlab.com/ee/ci/triggers/#use-a-webhook-payload) from Terraform Cloud once the GKE cluster is provisioned using [terraform](https://terraform.build).
 
-> IMPORTANT: WORK IN PROGRESS
-
 ## Pre-requisites
 
 - [Google Cloud Account](https://cloud.google.com)
@@ -22,7 +20,7 @@ How to bootstrap [flux](https://fluxcd.io) with [Google Kubernetes Engine(GKE)](
 Using [glab cli](https://gitlab.com/gitlab-org/cli)
 
 ```shell
-glab repo fork kameshsampath/flux-gke --clone
+glab repo fork kameshsampath/vanilla-gke --clone
 cd runner-gke
 export DEMO_HOME="$PWD"
 ```
@@ -60,6 +58,7 @@ The following sections details the inputs and outputs that are configurable as p
 | <a name="input_gitlab_agent_token"></a> [gitlab\_agent\_token](#input\_gitlab\_agent\_token) | GitLab Agent token (provided when registering an Agent in GitLab) | `any` | n/a | yes |
 | <a name="input_gitlab_kas_address"></a> [gitlab\_kas\_address](#input\_gitlab\_kas\_address) | GitLab Agent Server address (provided when registering an Agent in GitLab) | `string` | `"wss://kas.gitlab.com"` | no |
 | <a name="input_gke_num_nodes"></a> [gke\_num\_nodes](#input\_gke\_num\_nodes) | Number of GKE nodes | `number` | `2` | no |
+| <a name="input_install_gitlab_agent"></a> [install\_gitlab\_agent](#input\_install\_gitlab\_agent) | install gitlab agent | `bool` | `false` | no |
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The kubernetes versions of the GKE clusters | `string` | `"1.24."` | no |
 | <a name="input_machine_type"></a> [machine\_type](#input\_machine\_type) | The Google Cloud machine types for each cluster node | `string` | `"e2-standard-4"` | no |
 | <a name="input_release_channel"></a> [release\_channel](#input\_release\_channel) | The GKE release channel to use | `string` | `"stable"` | no |

@@ -1,6 +1,8 @@
 resource "helm_release" "gitlab_agent" {
   name = var.gitlab_agent_name
 
+  count = var.install_gitlab_agent ? 1 : 0
+
   repository = "https://charts.gitlab.io"
   chart      = "gitlab-agent"
 
