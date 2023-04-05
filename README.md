@@ -1,8 +1,6 @@
 # GKE Provision Template
 
-Template repository to provision [Google Kubernetes Engine(GKE)](https://cloud.google.com/kubernetes-engine) using [terraform](https://terraform.build).
-
->**IMPORTANT**: Work in Progress
+Template repository to provision [Google Kubernetes Engine(GKE)](https://cloud.google.com/kubernetes-engine) using [terraform](https://terraform.build). The terraform provision uses [Terraform Cloud](https://app.terraform.io/public/signup/account) as the backend.
 
 ## Pre-requisites
 
@@ -33,9 +31,6 @@ Set the following variables under **Workspace** --> **Variables**,
 
 ![Terraform Variables](/docs/images/tfcloud-variables.png)
 ![Terraform Variables](/docs/images/tfcloud-variables-2.png)
-
-> **NOTE**: `gitlab_agent_token` is required only if you are going to deploy GitLab Agent in the GKE cluster.
->
 
 ## Set environment
 
@@ -101,6 +96,12 @@ The following sections details the inputs and outputs that are configurable as p
 | <a name="output_project-name"></a> [project-name](#output\_project-name) | Google Cloud Project Name |
 | <a name="output_region"></a> [region](#output\_region) | Google Cloud Region where the cluster is provisioned |
 | <a name="output_zone"></a> [zone](#output\_zone) | Google Cloud Zone where the cluster is provisioned |
+
+## References
+
+- [Terraform Cloud Variables](https://developer.hashicorp.com/terraform/cloud-docs/api-docs/variables)
+- [Terraform Cloud Variable Set](https://developer.hashicorp.com/terraform/cloud-docs/api-docs/variable-sets)
+- [Terraform Notifications](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/settings/notifications)
 
 ## License
 
