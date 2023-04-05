@@ -6,11 +6,11 @@ footer-from: ../docs/.footer.md
 content: |
   {{ .Header }}
 
+  {{ include "../docs/.sa.md" }}
+
   The following sections details the inputs and outputs that are configurable as part of the tutorial's terraform automation,
 
   {{ .Inputs }}
-
-  {{ include "../docs/.deployment.md" }}
 
   {{ .Outputs }}
 
