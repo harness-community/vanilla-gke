@@ -1,12 +1,12 @@
 formatter: "md table"
 
-header-from: ../docs/.header.md
-footer-from: ../docs/.footer.md
+header-from: ./docs/.header.md
+footer-from: ./docs/.footer.md
 
 content: |
   {{ .Header }}
 
-  {{ include "../docs/.sa.md" }}
+  {{ include "./docs/.sa.md" }}
 
   The following sections details the inputs and outputs that are configurable as part of the tutorial's terraform automation,
 
